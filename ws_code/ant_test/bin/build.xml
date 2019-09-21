@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--清理==== 编译 ===测试====打包====部署-->
+<project name="myProject" basedir="." default="b">
+	<target name="a">
+	</target>
+	<target name="b" depends="a">
+	
+	</target>
+	
+</project>
+
