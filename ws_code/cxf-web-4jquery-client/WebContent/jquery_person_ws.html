@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript">
+	$(function(){
+		
+		$("#add").click(function(){
+			//获得Person基本数据
+			var name = $("#pname").val();
+			var gender = $("#gender").val();
+			var address = $("#address").val();
+			//组装消息体
+			var data = 
+			'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:q0="http://person.web.rl.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+			  +'<soapenv:Body>'
+			  +' <q0:addPerson>'
+			  +'   <arg0>'
+			  +'      <address>'+address+'</address>'
+			  +'      <gender>'+gender+'</gender>'
+			  +'      <name>'+name+'</name>'
+			  +'    </arg0>'
+			  +'  </q0:addPerson>'
+			  +'</soapenv:Body>'
+			  +'</soapenv:Envelope>';
+			$.ajax({
+				url:'http://localhost:8080/cxf-web-server/service/person',
+				type:'post',
+				dataType:'xml',//返回值的数据类型
+				contentType:'text/xml;charset=UTF-8',//指定发送的数据类型
+				data:data,//发送的消息体
+				success:function(responseText){
+					alert("添加成功");
+				},
+				error:function(){
+					alert('system error');
+				}
+				
+			});
+		});
+		
+		$("#select").click(function(){
+			//组装消息体
+			var data = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:q0="http://person.web.rl.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+				 +' <soapenv:Body>'
+			 	 +' <q0:getPersonAll/>'
+				 +' </soapenv:Body>'
+			 	 +'</soapenv:Envelope>';
+			$.ajax({
+				url:'http://localhost:8080/cxf-web-server/service/person',
+				type:'post',
+				dataType:'xml',//返回值的数据类型
+				contentType:'text/xml;charset=UTF-8',//指定发送的数据类型
+				data:data,//发送的消息体
+				success:function(responseText){
+					$("#tdiv").empty();
+					var jueryObj = $(responseText);
+					var returns = jueryObj.find("return");
+					var result = '';
+					returns.each(function(){
+						var pname = $(this).find('name').text();
+						var address = $(this).find('address').text();
+						var gender = $(this).find('gender').text();
+						result = result + pname + "    " + gender + "     "+address + "<br>";
+					});
+					$("#tdiv").append(result);
+				},
+				error:function(){
+					alert('system error');
+				}
+				
+			});
+		});
+	});
+</script>
+</head>
+<body>
+姓名：<input type="text" id="pname"> <br>
+性别：<input type="text" id="gender"> <br>
+地址：<input type="text" id="address"> <br>
+<input type="button" id="add" value="添加">
+<input type="button" id="select" value="查询">
+<div id="tdiv" style="border: 1px solid ;width: 400px;height: 400px;">
+
+</div>
+</body>
+</html>
