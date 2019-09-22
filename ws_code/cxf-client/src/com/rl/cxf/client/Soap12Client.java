@@ -8,7 +8,7 @@ public class Soap12Client {
 	public static void main(String[] args) {
 		HelloServiceService hss = new HelloServiceService();
 		HelloService hs = hss.getHelloServicePort();
-		String result = hs.sayHello("ÍõÎå");
+		String result = hs.sayHello("lisi");
 		System.out.println(result);
 	}
 
